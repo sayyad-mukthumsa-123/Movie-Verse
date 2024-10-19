@@ -41,9 +41,7 @@ const Register = () => {
         }
 
         try {
-            // const response = await fetch('http://localhost:5000/register',
-            const response = await fetch('https://movieverse-backend.onrender.com',
-                {
+            const response = await fetch('http://localhost:5000/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
