@@ -1,0 +1,32 @@
+/* Avatar container */
+.avatars {
+    display: flex;
+    justify-content: space-around; /* Distribute avatars evenly */
+    gap: 10px; /* Space between avatars */
+    margin-top: 20px;
+  }
+  
+  /* Individual avatar styling */
+  .avatar {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 10px; /* Optional: rounded corners */
+    border: 2px solid transparent; /* Default border */
+    transition: border 0.3s ease; /* Smooth border transition on hover */
+  }
+  
+  /* Avatar image styling */
+  .avatar img {
+    width: 80px; /* Reduced size of the avatars */
+    height: 80px; /* Reduced size of the avatars */
+    object-fit: cover; /* Make sure the image covers the area without distortion */
+    border-radius: 8px; /* Optional: rounded corners for avatar images */
+    cursor: pointer;
+  }
+  
+  /* Add hover effect for avatars */
+  .avatar:hover {
+    transform: scale(1.05); /* Slightly increase size on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+  }
+  

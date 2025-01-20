@@ -167,7 +167,6 @@
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 // import "../Styles/Login.css";
-// import AvatarSelection from "../components/AvatarSelection";
 
 // const Register = () => {
 //   const [username, setUsername] = useState('');
@@ -307,7 +306,6 @@
 //                     {confirmPasswordVisible ? 'Hide' : 'Show'}
 //                   </button>
 //                 </div>
-//                 <AvatarSelection/>
 //                 <span>
 //                   Already have an account?
 //                   <Link to="/login" className="link-signup">Sign In</Link>
@@ -328,25 +326,25 @@
 // export default Register;
 
 
+
 //avatar
+// Register.js
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Styles/Login.css";
-import AvatarSelection from "../components/AvatarSelection";
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [avatars, setAvatars] = useState([]);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(
-    JSON.parse(localStorage.getItem("selectedAvatar")) || undefined
-  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -354,6 +352,18 @@ const Register = () => {
     if (token) {
       navigate("/home_login"); // Redirect if already logged in
     }
+
+    // Fetch avatars from the Multiavatar API
+    const fetchAvatars = async () => {
+      try {
+        const generatedAvatars = Array.from({ length: 6 }, (_, i) => `https://api.multiavatar.com/${Math.random().toString(36).substring(7)}.svg`);
+        setAvatars(generatedAvatars);
+        setAvatar(generatedAvatars[0]); // Set the first avatar as default
+      } catch (error) {
+        console.error("Error fetching avatars:", error);
+      }
+    };
+    fetchAvatars();
   }, [navigate]);
 
   const togglePasswordVisibility = () => {
@@ -366,17 +376,11 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    // Avatar selection validation
-    if (selectedAvatar === undefined) {
-      toast.error('Please select an avatar.');
-      return;
-    }
-
-    if (!username || !email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword || !avatar) {
       toast.error('Please fill in all fields.');
       return;
     }
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
@@ -399,8 +403,7 @@ const Register = () => {
           Username: username,
           Email: email,
           Password: password,
-          ConfirmPassword: confirmPassword,
-          Avatar: selectedAvatar, // Send selected avatar to the server
+          Avatar: avatar,
         }),
       });
 
@@ -462,7 +465,6 @@ const Register = () => {
                     type="button"
                     className="btn position-absolute top-50 end-0 translate-middle-y"
                     onClick={togglePasswordVisibility}
-                    style={{ padding: '0.375rem 0.75rem', border: 'none', cursor: 'pointer' }}
                   >
                     {passwordVisible ? 'Hide' : 'Show'}
                   </button>
@@ -481,12 +483,24 @@ const Register = () => {
                     type="button"
                     className="btn position-absolute top-50 end-0 translate-middle-y"
                     onClick={toggleConfirmPasswordVisibility}
-                    style={{ padding: '0.375rem 0.75rem', border: 'none', cursor: 'pointer' }}
                   >
                     {confirmPasswordVisible ? 'Hide' : 'Show'}
                   </button>
                 </div>
-                <AvatarSelection setSelectedAvatar={setSelectedAvatar} /> {/* Pass setSelectedAvatar to AvatarSelection */}
+                <div className="avatar-selection mb-3">
+                  <h5>Select an Avatar</h5>
+                  <div className="avatar-grid">
+                    {avatars.map((av, index) => (
+                      <img
+                        key={index}
+                        src={av}
+                        alt="avatar"
+                        className={`avatar ${avatar === av ? 'selected' : ''}`}
+                        onClick={() => setAvatar(av)}
+                      />
+                    ))}
+                  </div>
+                </div>
                 <span>
                   Already have an account?
                   <Link to="/login" className="link-signup">Sign In</Link>

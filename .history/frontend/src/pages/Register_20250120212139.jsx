@@ -167,7 +167,6 @@
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 // import "../Styles/Login.css";
-// import AvatarSelection from "../components/AvatarSelection";
 
 // const Register = () => {
 //   const [username, setUsername] = useState('');
@@ -307,7 +306,6 @@
 //                     {confirmPasswordVisible ? 'Hide' : 'Show'}
 //                   </button>
 //                 </div>
-//                 <AvatarSelection/>
 //                 <span>
 //                   Already have an account?
 //                   <Link to="/login" className="link-signup">Sign In</Link>
@@ -329,179 +327,139 @@
 
 
 //avatar
-import React, { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import loader from "../assets/loader.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../Styles/Login.css";
-import AvatarSelection from "../components/AvatarSelection";
+import { useNavigate } from "react-router-dom";
+import "../Styles/Register.css";
+import "../Styles/Login.css"; // New stylesheet
 
-const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(
-    JSON.parse(localStorage.getItem("selectedAvatar")) || undefined
-  );
+export default function Register() {
+  const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [avatars, setAvatars] = useState([]);
+  const [selectedAvatar, setSelectedAvatar] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
+  };
+
+  const handleInputChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = () => {
+    if (selectedAvatar === undefined) {
+      toast.error("Please select an avatar before registering.", toastOptions);
+      return;
+    }
+
+    // Simulating storing user data (send userData & selectedAvatar to the backend)
+    console.log({ ...userData, avatar: avatars[selectedAvatar] });
+
+    toast.success("Registration successful!", toastOptions);
+    navigate("/login");
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/home_login"); // Redirect if already logged in
-    }
-  }, [navigate]);
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setConfirmPasswordVisible(!confirmPasswordVisible);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    // Avatar selection validation
-    if (selectedAvatar === undefined) {
-      toast.error('Please select an avatar.');
-      return;
-    }
-
-    if (!username || !email || !password || !confirmPassword) {
-      toast.error('Please fill in all fields.');
-      return;
-    }
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-
-    if (!passwordRegex.test(password)) {
-      toast.error('Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.');
-      return;
-    }
-
-    if (password.trim() !== confirmPassword.trim()) {
-      toast.error('Passwords do not match.');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          Username: username,
-          Email: email,
-          Password: password,
-          ConfirmPassword: confirmPassword,
-          Avatar: selectedAvatar, // Send selected avatar to the server
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Registration successful:', data);
-        navigate('/home_login');
-      } else {
-        toast.error(data.msg || 'Registration failed.');
+    const fetchAvatars = async () => {
+      try {
+        const data = [];
+        for (let i = 0; i < 4; i++) {
+          const response = await axios.get(
+            `${api}/${Math.round(Math.random() * 1000)}`,
+            { responseType: "text" } // Ensure response as text
+          );
+          data.push(response.data);
+        }
+        setAvatars(data);
+        setIsLoading(false);
+      } catch (error) {
+        toast.error("Failed to load avatars.", toastOptions);
       }
-    } catch (error) {
-      toast.error('An error occurred. Please try again later.');
-      console.error('Error:', error);
-    }
-  };
+    };
+
+    fetchAvatars();
+  }, [api]);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
-          <div className="card border-0 shadow rounded-3 my-5">
-            <div className="card-body p-4 p-sm-5">
-              <h1 className="card-title text-center mb-5">Sign Up</h1>
-              <form onSubmit={handleSubmit}>
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingUsername"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+    <div className="register-container">
+      <div className="register-form">
+        <h1>Create Account</h1>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          onChange={handleInputChange}
+          className="form-input"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleInputChange}
+          className="form-input"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleInputChange}
+          className="form-input"
+        />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          onChange={handleInputChange}
+          className="form-input"
+        />
+
+        {isLoading ? (
+          <div className="avatar-loader">
+            <img src={loader} alt="loader" />
+          </div>
+        ) : (
+          <div className="register-avatar-container">
+            <h2>Pick an Avatar</h2>
+            <div className="register-avatars">
+              {avatars.map((avatar, index) => (
+                <div
+                  key={index}
+                  className={`register-avatar ${
+                    selectedAvatar === index ? "register-avatar-selected" : ""
+                  }`}
+                >
+                  <img
+                    src={`data:image/svg+xml;base64,${btoa(avatar)}`}
+                    alt="avatar"
+                    onClick={() => setSelectedAvatar(index)}
+                    className="register-avatar-img"
                   />
-                  <label htmlFor="floatingUsername">Username</label>
                 </div>
-                <div className="form-floating mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="floatingEmail"
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <label htmlFor="floatingEmail">Email address</label>
-                </div>
-                <div className="form-floating mb-3 position-relative">
-                  <input
-                    type={passwordVisible ? "text" : "password"}
-                    className="form-control"
-                    id="floatingPassword"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <label htmlFor="floatingPassword">Password</label>
-                  <button
-                    type="button"
-                    className="btn position-absolute top-50 end-0 translate-middle-y"
-                    onClick={togglePasswordVisibility}
-                    style={{ padding: '0.375rem 0.75rem', border: 'none', cursor: 'pointer' }}
-                  >
-                    {passwordVisible ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                <div className="form-floating mb-3 position-relative">
-                  <input
-                    type={confirmPasswordVisible ? "text" : "password"}
-                    className="form-control"
-                    id="floatingConfirmPassword"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                  <label htmlFor="floatingConfirmPassword">Confirm Password</label>
-                  <button
-                    type="button"
-                    className="btn position-absolute top-50 end-0 translate-middle-y"
-                    onClick={toggleConfirmPasswordVisibility}
-                    style={{ padding: '0.375rem 0.75rem', border: 'none', cursor: 'pointer' }}
-                  >
-                    {confirmPasswordVisible ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                <AvatarSelection setSelectedAvatar={setSelectedAvatar} /> {/* Pass setSelectedAvatar to AvatarSelection */}
-                <span>
-                  Already have an account?
-                  <Link to="/login" className="link-signup">Sign In</Link>
-                </span>
-                <div className="d-grid">
-                  <Button variant="outline-info" className="submit" type="submit">Sign Up</Button>
-                </div>
-              </form>
-              <ToastContainer />
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        <button onClick={handleRegister} className="register-btn">
+          Register
+        </button>
+        <ToastContainer />
       </div>
     </div>
   );
-};
-
-export default Register;
+}

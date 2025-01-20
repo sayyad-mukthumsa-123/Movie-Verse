@@ -98,5 +98,31 @@
     }
 }
 
+/* avatar */
 
-
+.avatars {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border 0.3s ease;
+  }
+  
+  .avatar.selected {
+    border: 2px solid #0dcaf0;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  

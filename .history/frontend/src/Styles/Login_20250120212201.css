@@ -98,5 +98,40 @@
     }
 }
 
+/* avatar */
 
-
+.register-avatar-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .register-avatars {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .register-avatar {
+    border: 2px solid transparent;
+    border-radius: 50%;
+    padding: 5px;
+    transition: border-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .register-avatar-selected {
+    border-color: #0dcaf0;
+  }
+  
+  .register-avatar-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .avatar-loader img {
+    width: 50px;
+    height: 50px;
+  }
+  
