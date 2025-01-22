@@ -1,0 +1,85 @@
+/* 
+.avatars {
+    display: flex;
+    justify-content: space-around; 
+    gap: 10px; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  
+  .avatar {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 10px; 
+    border: 2px solid transparent;
+    transition: border 0.3s ease; 
+  }
+  
+  
+  .avatar img {
+    width: 85px; 
+    height: 85px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    cursor: pointer;
+  }
+  
+ 
+  .avatar:hover {
+    transform: scale(1.05); 
+    transition: transform 0.3s ease; 
+  }
+  
+  .heading-avatar
+  {
+    display: flex;
+    justify-content: center;
+    color: #0dcaf0;
+    font-size: x-large;
+    font-weight: 500;
+  } */
+   
+
+  .avatars {
+    display: flex;
+    justify-content: center;  /* Align avatars to the center of the container */
+    gap: 20px;  /* Space between avatars */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+  }
+  
+  /* Individual avatar styling */
+  .avatar {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 10px; /* Optional: rounded corners */
+    border: 2px solid transparent; /* Default border */
+    transition: border 0.3s ease; /* Smooth border transition on hover */
+  }
+  
+  /* Avatar image styling */
+  .avatar img {
+    width: 85px; /* Reduced size of the avatars */
+    height: 85px; /* Reduced size of the avatars */
+    object-fit: cover; /* Make sure the image covers the area without distortion */
+    border-radius: 8px; /* Optional: rounded corners for avatar images */
+    cursor: pointer;
+  }
+  
+  /* Add hover effect for avatars */
+  .avatar:hover {
+    transform: scale(1.05); /* Slightly increase size on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+  }
+  
+  /* Heading style for avatar selection */
+  .heading-avatar {
+    display: flex;
+    justify-content: center;
+    color: #0dcaf0;
+    font-size: x-large;
+    font-weight: 500;
+  }
+  

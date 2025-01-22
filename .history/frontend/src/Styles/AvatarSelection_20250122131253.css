@@ -1,0 +1,48 @@
+
+/* .avatars {
+    display: flex;
+    justify-content: space-around; 
+    gap: 10px; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+  } */
+  .avatars {
+    display: flex; /* This ensures the avatars are displayed in a row */
+    flex-wrap: wrap; /* Allows avatars to wrap to the next line if there are too many to fit in one row */
+    gap: 10px; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  
+  .avatar {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 10px; 
+    border: 2px solid transparent;
+    transition: border 0.3s ease; 
+  }
+  
+  
+  .avatar img {
+    width: 85px; 
+    height: 85px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    cursor: pointer;
+  }
+  
+ 
+  .avatar:hover {
+    transform: scale(1.05); 
+    transition: transform 0.3s ease; 
+  }
+  
+  .heading-avatar
+  {
+    display: flex;
+    justify-content: center;
+    color: #0dcaf0;
+    font-size: x-large;
+    font-weight: 500;
+  }

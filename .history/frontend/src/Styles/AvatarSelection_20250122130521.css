@@ -1,0 +1,93 @@
+/* 
+.avatars {
+    display: flex;
+    justify-content: space-around; 
+    gap: 10px; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  
+  .avatar {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 10px; 
+    border: 2px solid transparent;
+    transition: border 0.3s ease; 
+  }
+  
+  
+  .avatar img {
+    width: 85px; 
+    height: 85px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    cursor: pointer;
+  }
+  
+ 
+  .avatar:hover {
+    transform: scale(1.05); 
+    transition: transform 0.3s ease; 
+  }
+  
+  .heading-avatar
+  {
+    display: flex;
+    justify-content: center;
+    color: #0dcaf0;
+    font-size: x-large;
+    font-weight: 500;
+  } */
+   
+
+  .avatars {
+    display: flex;                /* Make the container a flexbox */
+    justify-content: flex-start;  /* Align avatars to the start of the container */
+    gap: 15px;                    /* Space between avatars */
+    flex-wrap: wrap;              /* Allow wrapping of avatars if necessary */
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Individual avatar styling */
+  .avatar {
+    cursor: pointer;
+    border-radius: 10px;          /* Rounded corners for avatars */
+    border: 2px solid transparent; /* Default border */
+    transition: border 0.3s ease; /* Smooth border transition on hover */
+    display: inline-block;        /* Ensure avatars stay in a row */
+    width: 85px;                  /* Fixed width */
+    height: 85px;                 /* Fixed height */
+    object-fit: cover;            /* Ensures proper image scaling */
+  }
+  
+  /* Avatar image styling */
+  .avatar img {
+    width: 100%;                  /* Make the image take the full width of the container */
+    height: 100%;                 /* Make the image take the full height of the container */
+    border-radius: 8px;           /* Rounded corners for avatar images */
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Smooth scaling effect */
+  }
+  
+  /* Hover effect on avatar */
+  .avatar:hover {
+    transform: scale(1.05);       /* Slightly enlarge the avatar on hover */
+  }
+  
+  /* Highlight selected avatar with a blue border */
+  .avatar.selected {
+    border: 4px solid #0dcaf0;    /* Blue border for selected avatar */
+  }
+  
+  /* Heading style for avatar selection */
+  .heading-avatar {
+    display: flex;
+    justify-content: center;
+    color: #0dcaf0;
+    font-size: x-large;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+  
