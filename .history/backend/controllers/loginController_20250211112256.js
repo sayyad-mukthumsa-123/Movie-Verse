@@ -1,0 +1,171 @@
+// // // const jwt = require('jsonwebtoken');
+// // // const UserModel = require("../models/usermodel");
+
+// // // const Login = async (req, res) => {
+// // //     try {
+// // //         const { Email, Password } = req.body;
+// // //         const userExist = await UserModel.findOne({ Email });
+// // //         if (userExist) {
+// // //             if (userExist.Password === Password) {
+// // //                 const payload = {
+// // //                     user: {
+// // //                         id: userExist.id
+// // //                     }
+// // //                 };
+// // //                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Use environment variable for secret
+// // //                 return res.json({ token, msg: "User login successful" });
+// // //             } else {
+// // //                 return res.status(400).json({ msg: "Invalid credentials" });
+// // //             }
+// // //         } else {
+// // //             return res.status(400).json({ msg: "Invalid credentials" });
+// // //         }
+// // //     } catch (error) {
+// // //         res.status(400).json({ msg: "Error: " + error.message });
+// // //     }
+// // // };
+
+// // // module.exports = Login;
+
+
+// // //bcrypt-avatar store
+// // const jwt = require('jsonwebtoken');
+// // const bcrypt = require('bcrypt');
+// // const UserModel = require("../models/usermodel");
+
+// // const Login = async (req, res) => {
+// //     try {
+// //         const { Email, Password } = req.body;
+// //         console.log(Email);
+// //         console.log(Password);
+
+
+// //         // Check if user exists
+// //         const userExist = await UserModel.findOne({ Email });
+// //         console.log(userExist);
+
+// //         if (!userExist) {
+// //             return res.status(400).json({ msg: "User not found" });
+// //         }
+
+// //         // Compare the provided password with the hashed password in the database
+// //         const isMatch = await bcrypt.compare(Password.trim(), userExist.Password.trim());
+// //         if (!isMatch) {
+// //             return res.status(400).json({ msg: "Invalid credentials" });
+// //         }
+
+// //         // Create JWT payload and sign token
+// //         const payload = {
+// //             user: {
+// //                 id: userExist.id
+// //             }
+// //         };
+// //         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Use environment variable for secret
+
+// //         return res.json({ token, msg: "User login successful" });
+
+// //     } catch (error) {
+// //         res.status(500).json({ msg: "Error: " + error.message });
+// //     }
+
+// // };
+
+// // module.exports = Login;
+
+
+// //err
+// const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcrypt');
+// const UserModel = require("../models/usermodel");
+
+// const Login = async (req, res) => {
+//     try {
+//         const { Email, Password } = req.body;
+
+//         // Check if user exists
+//         const userExist = await UserModel.findOne({ Email });
+//         if (!userExist) {
+//             return res.status(400).json({ msg: "User not found" });
+//         }
+
+//         // Compare the provided password with the hashed password in the database
+//         const isMatch = await bcrypt.compare(Password, userExist.Password);
+//         if (!isMatch) {
+//             return res.status(400).json({ msg: "Invalid credentials" });
+//         }
+
+//         // Create JWT payload and sign token
+//         const payload = {
+//             user: {
+//                 id: userExist.id
+//             }
+//         };
+//         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+//         return res.json({ token, msg: "User login successful" });
+
+//     } catch (error) {
+//         console.error("Login Error:", error);
+//         res.status(500).json({ msg: "Internal server error." });
+//     }
+// };
+
+// module.exports = Login;
+
+
+//err
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const UserModel = require("../models/usermodel");
+
+const Login = async (req, res) => {
+    try {
+
+        const bcrypt = require('bcrypt');
+
+        const hashedPassword = "$2a$10$ZVaKY2w7hXi1DZ6lD3oneegh6I10hmbKaCZ67E/0ZFOJsmTq5/M2q";  // Copy from your DB
+        const plainPassword = "Varun@123"; // The password you are testing
+
+        bcrypt.compare(plainPassword, hashedPassword, (err, result) => {
+            if (err) console.error(err);
+            console.log("Password match:", result); // Should print true if correct
+        });
+
+        const { Email, Password } = req.body;
+
+        // Check for empty fields
+        if (!Email || !Password) {
+            return res.status(400).json({ msg: "Please provide both email and password." });
+        }
+
+        // Check if user exists
+        const userExist = await UserModel.findOne({ Email });
+        if (!userExist) {
+            return res.status(400).json({ msg: "User not found" });
+        }
+
+        // Compare provided password with hashed password
+        const isMatch = await bcrypt.compare(Password, userExist.Password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Invalid credentials" });
+        }
+
+        // Ensure JWT_SECRET is defined
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET is not defined in the environment.");
+            return res.status(500).json({ msg: "Internal server error." });
+        }
+
+        // Create JWT token
+        const payload = { user: { id: userExist.id } };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        return res.status(200).json({ token, msg: "User login successful" });
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        res.status(500).json({ msg: "Internal server error." });
+    }
+};
+
+module.exports = Login;
